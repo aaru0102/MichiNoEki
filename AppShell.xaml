@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="RoadsideStationApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:RoadsideStationApp">
+
+    <Shell.Resources>
+        <Style Class="FlyoutItemLabelStyle" TargetType="Label">
+            <Setter Property="FontSize" Value="36" />
+        </Style>
+    </Shell.Resources>
+
+    <FlyoutItem Title="マップ">
+        <ShellContent ContentTemplate="{DataTemplate local:MapPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="フィルター設定">
+        <ShellContent ContentTemplate="{DataTemplate local:FilterSettingPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="ピンカラー設定">
+        <ShellContent ContentTemplate="{DataTemplate local:PinColorSettingPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="道の駅リスト">
+        <ShellContent ContentTemplate="{DataTemplate local:MichiNoEkiListPage}"/>
+    </FlyoutItem>
+
+    <FlyoutItem Title="訪問率">
+        <ShellContent ContentTemplate="{DataTemplate local:VisitedRatePage}"/>
+    </FlyoutItem>
+
+</Shell>
