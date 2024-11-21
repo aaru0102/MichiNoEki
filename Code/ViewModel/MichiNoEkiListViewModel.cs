@@ -24,10 +24,7 @@ namespace RoadsideStationApp
         /// <summary>
         /// 地方名称リスト
         /// </summary>
-        public List<string> RegionNameList { get; set; } = new List<string>()
-        {
-            "北海道地方","東北地方","関東地方","北陸地方","中部地方","近畿地方","中国地方","四国地方","九州地方"
-        };
+        public List<string> RegionNameList { get; set; } = new List<string>();
 
         /// <summary>
         /// 都道府県名称リスト
@@ -67,10 +64,50 @@ namespace RoadsideStationApp
             // 道の駅データ管理Modelのインスタンス取得
             _michiNoEkiDataModel = App.Instance.MichiNoEkiDataModel;
 
+            _michiNoEkiDataModel.UpdateMichiNoEkiInfoEvent += OnUpdateMichiNoEkiInfoEvent;
+
             // コマンドハンドラ登録
             SelectRegionCommand = new DelegateCommand(OnSelectRegionCommand);
             SelectPrefectureCommand = new DelegateCommand(OnSelectPrefectureCommand);
             SelectMichiNoEkiCommand = new DelegateCommand(OnSelectMichiNoEkiCommand);
+
+            // 地方名称リスト初期化
+            foreach (var item in RegionPrefectureDic.Dic.Keys)
+            {
+                RegionNameList.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// 道の駅データ更新イベントハンドラ
+        /// </summary>
+        /// <param name="sender">イベント送信元</param>
+        /// <param name="e">イベント引数</param>
+        private void OnUpdateMichiNoEkiInfoEvent(object? sender, UpdateMichiNoEkiInfoEventArgs e)
+        {
+            switch (e.Kind)
+            {
+                // 更新
+                case UpdateKind.Update:
+                    // 訪問状態更新
+                    MichiNoEkiListViewMichiNoEkiNameList? info = MichiNoEkiNameList.FirstOrDefault(info => info.ID == e.MichiNoEkiInfo.ID);
+                    if (info != null)
+                    {
+                        info.IsVisited.Value = e.MichiNoEkiInfo.IsVisited;
+                    };
+                    break;
+
+                // 追加(機能なし)
+                case UpdateKind.Add:
+                    break;
+
+                // 削除(機能なし)
+                case UpdateKind.Delete:
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         /// <summary>
@@ -103,11 +140,11 @@ namespace RoadsideStationApp
 
             // 選択都道府県に合わせて道の駅名称リストを更新
             MichiNoEkiNameList.Clear();
-            foreach (var item in infoList)
+            foreach (var info in infoList)
             {
-                if (item.Prefecture == SelectedPrefecture.Value)
+                if (info.Prefecture == SelectedPrefecture.Value)
                 {
-                    MichiNoEkiNameList.Add(new MichiNoEkiListViewMichiNoEkiNameList(item.ID, item.Name));
+                    MichiNoEkiNameList.Add(new MichiNoEkiListViewMichiNoEkiNameList(info));
                 }
             }
         }
@@ -118,84 +155,17 @@ namespace RoadsideStationApp
         /// <param name="param">コマンド引数</param>
         private void OnSelectRegionCommand(object? param)
         {
-            switch (SelectedRegion.Value)
+            // 未選択の場合はスルー
+            if (SelectedRegion.Value == null)
             {
-                case "北海道地方":
-                    PrefectureNameList.Clear();
-                    PrefectureNameList.Add("北海道");
-                    break;
-                case "東北地方":
-                    PrefectureNameList.Clear();
-                    PrefectureNameList.Add("青森県");
-                    PrefectureNameList.Add("岩手県");
-                    PrefectureNameList.Add("宮城県");
-                    PrefectureNameList.Add("秋田県");
-                    PrefectureNameList.Add("山形県");
-                    PrefectureNameList.Add("福島県");
-                    break;
-                case "関東地方":
-                    PrefectureNameList.Clear();
-                    PrefectureNameList.Add("茨城県");
-                    PrefectureNameList.Add("栃木県");
-                    PrefectureNameList.Add("群馬県");
-                    PrefectureNameList.Add("埼玉県");
-                    PrefectureNameList.Add("千葉県");
-                    PrefectureNameList.Add("東京都");
-                    PrefectureNameList.Add("神奈川県");
-                    PrefectureNameList.Add("山梨県");
-                    break;
-                case "北陸地方":
-                    PrefectureNameList.Clear();
-                    PrefectureNameList.Add("新潟県");
-                    PrefectureNameList.Add("富山県");
-                    PrefectureNameList.Add("石川県");
-                    break;
-                case "中部地方":
-                    PrefectureNameList.Clear();
-                    PrefectureNameList.Add("長野県");
-                    PrefectureNameList.Add("岐阜県");
-                    PrefectureNameList.Add("静岡県");
-                    PrefectureNameList.Add("愛知県");
-                    PrefectureNameList.Add("三重県");
-                    break;
-                case "近畿地方":
-                    PrefectureNameList.Clear();
-                    PrefectureNameList.Add("福井県");
-                    PrefectureNameList.Add("滋賀県");
-                    PrefectureNameList.Add("京都府");
-                    PrefectureNameList.Add("大阪府");
-                    PrefectureNameList.Add("兵庫県");
-                    PrefectureNameList.Add("奈良県");
-                    PrefectureNameList.Add("和歌山県");
-                    break;
-                case "中国地方":
-                    PrefectureNameList.Clear();
-                    PrefectureNameList.Add("鳥取県");
-                    PrefectureNameList.Add("島根県");
-                    PrefectureNameList.Add("岡山県");
-                    PrefectureNameList.Add("広島県");
-                    PrefectureNameList.Add("山口県");
-                    break;
-                case "四国地方":
-                    PrefectureNameList.Clear();
-                    PrefectureNameList.Add("徳島県");
-                    PrefectureNameList.Add("香川県");
-                    PrefectureNameList.Add("愛媛県");
-                    PrefectureNameList.Add("高知県");
-                    break;
-                case "九州地方":
-                    PrefectureNameList.Clear();
-                    PrefectureNameList.Add("福岡県");
-                    PrefectureNameList.Add("佐賀県");
-                    PrefectureNameList.Add("長崎県");
-                    PrefectureNameList.Add("熊本県");
-                    PrefectureNameList.Add("大分県");
-                    PrefectureNameList.Add("宮崎県");
-                    PrefectureNameList.Add("鹿児島県");
-                    PrefectureNameList.Add("沖縄県");
-                    break;
-                default:
-                    break;
+                return;
+            }
+
+            // 都道府県名称リストを更新
+            PrefectureNameList.Clear();
+            foreach (var item in RegionPrefectureDic.Dic[SelectedRegion.Value])
+            {
+                PrefectureNameList.Add(item);
             }
         }
     }

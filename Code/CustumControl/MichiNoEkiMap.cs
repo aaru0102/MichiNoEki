@@ -88,7 +88,7 @@ namespace RoadsideStationApp
 
                 if (location != null)
                 {
-                    MoveToRegion(MapSpan.FromCenterAndRadius(new Location(location.Latitude, location.Longitude), Distance.FromMiles(1)));
+                    MoveToRegion(MapSpan.FromCenterAndRadius(new Location(location.Latitude, location.Longitude), Distance.FromMiles(50)));
                 }
             }
             catch (Exception)

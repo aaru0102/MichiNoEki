@@ -13,10 +13,17 @@ namespace RoadsideStationApp
     /// </summary>
     public class MapViewModel
     {
+        private Dictionary<int, bool> _tempVisibleDic = new Dictionary<int, bool>();
+
         /// <summary>
         /// 道の駅データ管理Model
         /// </summary>
         private MichiNoEkiDataModel _michiNoEkiDataModel;
+
+        /// <summary>
+        /// フィルター設定データ管理Model
+        /// </summary>
+        private FilterSettingDataModel _filterSettingDataModel;
 
         /// <summary>
         /// 道の駅ピン
@@ -49,6 +56,13 @@ namespace RoadsideStationApp
             // 道の駅データ関連のイベント捕捉
             _michiNoEkiDataModel.LoadedMichiNoEkiInfoEvent += OnLoadedMichiNoEkiInfoEvent;
             _michiNoEkiDataModel.UpdateMichiNoEkiInfoEvent += OnUpdateMichiNoEkiInfoEvent;
+
+            // フィルター設定データ管理Model取得
+            _filterSettingDataModel = App.Instance.FilterSettingDataModel;
+
+            // フィルター設定データ管理Modelのイベント捕捉
+            _filterSettingDataModel.AllUpdateVisibleEvent += OnAllUpdateVisibleEvent;
+            _filterSettingDataModel.UpdateVisibleEvent += OnUpdateVisibleEvent;
         }
 
         /// <summary>
@@ -120,6 +134,11 @@ namespace RoadsideStationApp
             foreach (var michiNoEkiInfo in e.MichiNoEkiInfoList)
             {
                 Pins.Add(michiNoEkiInfo.ID, new MichiNoEkiPin(michiNoEkiInfo));
+
+                if(_tempVisibleDic.ContainsKey(michiNoEkiInfo.ID) == true)
+                {
+                    Pins[michiNoEkiInfo.ID].Visibility.Value = _tempVisibleDic[michiNoEkiInfo.ID];
+                }
             }
         }
 
@@ -150,6 +169,38 @@ namespace RoadsideStationApp
                 default:
                     break;
             }
+        }
+
+        /// <summary>
+        /// 表示状態ロードイベントハンドラ
+        /// </summary>
+        /// <param name="sender">イベント送信元</param>
+        /// <param name="e">イベント引数</param>
+        private void OnAllUpdateVisibleEvent(object? sender, AllUpdateVisibleEventArgs e)
+        {
+            // ピンの表示状態セット
+            foreach (var item in e.VisibleDic)
+            {
+                if (Pins.ContainsKey(item.Key) == true)
+                {
+                    Pins[item.Key].Visibility.Value = item.Value;
+                }
+                else
+                {
+                    _tempVisibleDic.Add(item.Key, item.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 表示状態ロードイベントハンドラ
+        /// </summary>
+        /// <param name="sender">イベント送信元</param>
+        /// <param name="e">イベント引数</param>
+        private void OnUpdateVisibleEvent(object? sender, UpdateVisibleEventArgs e)
+        {
+            // ピンの表示状態更新
+            Pins[e.ID].Visibility.Value = e.Visible;
         }
 
         /// <summary>

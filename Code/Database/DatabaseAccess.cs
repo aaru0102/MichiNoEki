@@ -38,7 +38,6 @@ namespace RoadsideStationApp
         /// レコードをアップデート
         /// </summary>
         public async Task<bool> UpdateAsync<T>(T item) where T : new()
-
         {
             var database = await GetDatabase();
             int updateLineCnt = await database.UpdateAsync(item);
@@ -75,6 +74,12 @@ namespace RoadsideStationApp
             {
                 _database = new SQLiteAsyncConnection(_dbPath);
                 await _database.CreateTableAsync<MichiNoEkiInfoTable>();
+                await _database.CreateTableAsync<SettingInfo>();
+                await _database.CreateTableAsync<FilterSettingInfo>();
+                await _database.CreateTableAsync<PinColorSettingVisitedInfo>();
+                await _database.CreateTableAsync<PinColorSettingOpenTimeInfo>();
+                await _database.CreateTableAsync<PinColorSettingCloseTimeInfo>();
+                await _database.CreateTableAsync<PinColorSettingCloseDayInfo>();
             }
 
             return _database;

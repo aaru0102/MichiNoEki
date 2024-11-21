@@ -22,14 +22,19 @@ namespace RoadsideStationApp
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
+        /// 訪問状態
+        /// </summary>
+        public AutoNotifyProperty<bool> IsVisited { get; set; } = new AutoNotifyProperty<bool>();
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="id">ID</param>
-        /// <param name="name">名称</param>
-        public MichiNoEkiListViewMichiNoEkiNameList(int id, string name)
+        /// <param name="info">道の駅データ</param>
+        public MichiNoEkiListViewMichiNoEkiNameList(MichiNoEkiInfo info)
         {
-            ID = id;
-            Name = name;
+            ID = info.ID;
+            Name = info.Name;
+            IsVisited.Value = info.IsVisited;
         }
     }
 }

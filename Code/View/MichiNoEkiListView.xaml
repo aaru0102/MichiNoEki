@@ -17,12 +17,12 @@
         </Grid.RowDefinitions>
 
         <HorizontalStackLayout Grid.Row="0">
-            <Picker Title="地方" FontSize="24" ItemsSource="{Binding RegionNameList}" SelectedItem="{Binding SelectedRegion.Value}" WidthRequest="150">
+            <Picker Title="地方" FontSize="24" ItemsSource="{Binding RegionNameList}" SelectedItem="{Binding SelectedRegion.Value}" WidthRequest="150" BackgroundColor="MediumSlateBlue">
                 <Picker.Behaviors>
                     <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding SelectRegionCommand}"/>
                 </Picker.Behaviors>
             </Picker>
-            <Picker Title="都道府県" FontSize="24" ItemsSource="{Binding PrefectureNameList}" SelectedItem="{Binding SelectedPrefecture.Value}" WidthRequest="150">
+            <Picker Title="都道府県" FontSize="24" ItemsSource="{Binding PrefectureNameList}" SelectedItem="{Binding SelectedPrefecture.Value}" WidthRequest="150" BackgroundColor="DarkSalmon">
                 <Picker.Behaviors>
                     <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding SelectPrefectureCommand}"/>
                 </Picker.Behaviors>
@@ -32,17 +32,28 @@
         <Border Grid.Row="1" StrokeThickness="10" Margin="0,10,0,0"/>
 
         <CollectionView Grid.Row="2" ItemsSource="{Binding MichiNoEkiNameList}" ItemSizingStrategy="MeasureFirstItem">
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10" />
-            </CollectionView.ItemsLayout>
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Border StrokeThickness="2">
-                        <Label Text="{Binding Name}" FontSize="24" Margin="5,10">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=BindingContext.SelectMichiNoEkiCommand}" CommandParameter="{Binding ID}"/>
-                            </Label.GestureRecognizers>
-                        </Label>
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Style.Triggers>
+                                        <DataTrigger TargetType="Grid" Binding="{Binding IsVisited.Value}" Value="True">
+                                            <Setter Property="BackgroundColor" Value="MediumSeaGreen"/>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Grid" Binding="{Binding IsVisited.Value}" Value="False">
+                                            <Setter Property="BackgroundColor" Value="DarkOrange"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <Label Text="{Binding Name}" FontSize="24" Margin="5,10">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=BindingContext.SelectMichiNoEkiCommand}" CommandParameter="{Binding ID}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

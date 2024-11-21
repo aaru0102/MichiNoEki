@@ -32,25 +32,24 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <VerticalStackLayout>
-
-            </VerticalStackLayout>
             <!-- 名称 -->
-            <Label Grid.Row="0" Text="{Binding Name.Value}" IsVisible="{Binding EditMode.Value, Converter={StaticResource BoolReverseConverter}}" FontSize="36"/>
-            <Entry Grid.Row="0" Text="{Binding Name.Value}" IsVisible="{Binding EditMode.Value}" FontSize="36"/>
-            <Border Grid.Row="1" StrokeThickness="4" Margin="0,20,0,0"/>
+            <Label Grid.Row="0" Grid.Column="0" Text="{Binding Name.Value}" IsEnabled="{Binding EditMode.Value, Converter={StaticResource BoolReverseConverter}}" FontSize="36"/>
+            <Border Grid.Row="1" Grid.Column="0" StrokeThickness="4" Margin="0,20,0,0"/>
 
             <!-- 住所 -->
-            <Label Grid.Row="2" Text="{Binding Address.Value}" IsEnabled="{Binding EditMode.Value, Converter={StaticResource BoolReverseConverter}}" FontSize="24"/>
+            <Label Grid.Row="2" Grid.Column="0" Text="{Binding Address.Value}" IsEnabled="{Binding EditMode.Value, Converter={StaticResource BoolReverseConverter}}" FontSize="24"/>
 
             <!-- オープン済みかどうか -->
-            <HorizontalStackLayout Grid.Row="3">
+            <HorizontalStackLayout Grid.Row="3" Grid.Column="0">
                 <Label Text="未オープン" IsVisible="{Binding EditModeOrNotopenVisible.Value}" FontSize="24" TextColor="Red" Margin="0,14,0,0"/>
                 <CheckBox IsChecked="{Binding IsOpened.Value, Converter={StaticResource BoolReverseConverter}}" IsVisible="{Binding EditMode.Value}" Color="Red" Margin="0,10,0,0"/>
             </HorizontalStackLayout>
 
-            <HorizontalStackLayout Grid.Row="4" IsVisible="{Binding IsOpened.Value}" Margin="0,10,0,0">
+            <HorizontalStackLayout Grid.Row="4" Grid.Column="0" IsVisible="{Binding IsOpened.Value}" Margin="0,10,0,0">
                 <!-- 訪問状態 -->
                 <HorizontalStackLayout>
                     <Label Text="訪問状態" FontSize="24" Margin="0,4,0,0"/>
@@ -66,21 +65,21 @@
             </HorizontalStackLayout>
 
             <!-- 注意事項あり -->
-            <HorizontalStackLayout Grid.Row="5">
+            <HorizontalStackLayout Grid.Row="5" Grid.Column="0">
                 <Label Text="注意事項あり" IsVisible="{Binding EditModeOrNoticeVisible.Value}" FontSize="24" TextColor="Orange" Margin="0,14,0,0"/>
                 <CheckBox IsChecked="{Binding Notice.Value}" IsVisible="{Binding EditMode.Value}" Color="Orange" Margin="0,10,0,0"/>
             </HorizontalStackLayout>
 
             <!-- スタンプ24時間押下OK -->
-            <HorizontalStackLayout Grid.Row="6">
+            <HorizontalStackLayout Grid.Row="6" Grid.Column="0">
                 <Label Text="スタンプ24時間押下OK" IsVisible="{Binding EditModeOrStampAllTimeOKVisible.Value}" FontSize="24" TextColor="LimeGreen" Margin="0,14,0,0"/>
                 <CheckBox IsChecked="{Binding StampAllTimeOK.Value}" IsVisible="{Binding EditMode.Value}" Color="LimeGreen" Margin="0,10,0,0"/>
             </HorizontalStackLayout>
 
             <!-- 営業時間 -->
-            <Label Grid.Row="7" Text="営業時間" FontSize="24" Margin="0,10,0,0"/>
-            <CollectionView Grid.Row="8" ItemsSource="{Binding BusinessHoursList}" ItemSizingStrategy="MeasureFirstItem"
-                        ItemsLayout="HorizontalList" VerticalOptions="Start" HeightRequest="78">
+            <Label Grid.Row="7" Grid.Column="0" Text="営業時間" FontSize="24" Margin="0,10,0,0"/>
+            <CollectionView Grid.Row="8" Grid.Column="0" ItemsSource="{Binding BusinessHoursList}" ItemSizingStrategy="MeasureFirstItem"
+                        ItemsLayout="HorizontalList" HeightRequest="78">
                 <CollectionView.Header>
                     <Grid Padding="0">
                         <Label Text="　　　　" FontAttributes="Bold" FontSize="Body" HeightRequest="26" WidthRequest="80" HorizontalOptions="Start" VerticalOptions="Start" Margin="0,0,0,0"/>
@@ -116,9 +115,9 @@
             </CollectionView>
 
             <!-- 定休日 -->
-            <Label Grid.Row="9" Text="定休日" FontSize="24" Margin="0,10,0,0"/>
-            <CollectionView Grid.Row="10" ItemsSource="{Binding RegularHolidayList}"  ItemSizingStrategy="MeasureFirstItem"
-                        ItemsLayout="HorizontalList" VerticalOptions="Start" HeightRequest="74">
+            <Label Grid.Row="9" Grid.Column="0" Text="定休日" FontSize="24" Margin="0,10,0,0"/>
+            <CollectionView Grid.Row="10" Grid.Column="0" ItemsSource="{Binding RegularHolidayList}"  ItemSizingStrategy="MeasureFirstItem"
+                        ItemsLayout="HorizontalList" HeightRequest="74">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout Orientation="Vertical" Padding="0">
@@ -144,18 +143,18 @@
             </CollectionView>
 
             <!-- 備考欄 -->
-            <Label Grid.Row="11" Text="備考欄" FontSize="24" Margin="0,10,0,0"/>
-            <Border Grid.Row="12" StrokeThickness="1" IsVisible="{Binding EditMode.Value, Converter={StaticResource BoolReverseConverter}}">
+            <Label Grid.Row="11" Grid.Column="0" Text="備考欄" FontSize="24" Margin="0,10,0,0"/>
+            <Border Grid.Row="12" Grid.Column="0" StrokeThickness="1" IsVisible="{Binding EditMode.Value, Converter={StaticResource BoolReverseConverter}}">
                 <Label Text="{Binding Comment.Value}" FontSize="Body"/>
             </Border>
-            <Border Grid.Row="12" StrokeThickness="1" IsVisible="{Binding EditMode.Value}">
+            <Border Grid.Row="12" Grid.Column="0" StrokeThickness="1" IsVisible="{Binding EditMode.Value}">
                 <VerticalStackLayout>
                     <Editor Text="{Binding Comment.Value}" FontSize="Body" HeightRequest="108"/>
                 </VerticalStackLayout>
             </Border>
 
             <!-- ボタン -->
-            <Grid Grid.Row="13" HorizontalOptions="End">
+            <Grid Grid.Row="13" Grid.Column="0" HorizontalOptions="End">
                 <HorizontalStackLayout>
                     <Button Text="編集" IsVisible="{Binding EditMode.Value, Converter={StaticResource BoolReverseConverter}}" Command="{Binding EditCommand}"/>
                     <Button Text="保存" IsVisible="{Binding EditMode.Value}" Command="{Binding SaveCommand}"/>

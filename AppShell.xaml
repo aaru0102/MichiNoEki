@@ -12,23 +12,23 @@
     </Shell.Resources>
 
     <FlyoutItem Title="マップ">
-        <ShellContent ContentTemplate="{DataTemplate local:MapPage}"/>
+        <ShellContent Content="{x:Static local:App.MapPageInstance}"/>
     </FlyoutItem>
 
     <FlyoutItem Title="フィルター設定">
-        <ShellContent ContentTemplate="{DataTemplate local:FilterSettingPage}"/>
+        <ShellContent Content="{x:Static local:App.FilterSettingPageInstance}"/>
     </FlyoutItem>
 
     <FlyoutItem Title="ピンカラー設定">
-        <ShellContent ContentTemplate="{DataTemplate local:PinColorSettingPage}"/>
+        <ShellContent Content="{x:Static local:App.PinColorSettingPageInstance}"/>
     </FlyoutItem>
 
     <FlyoutItem Title="道の駅リスト">
-        <ShellContent ContentTemplate="{DataTemplate local:MichiNoEkiListPage}"/>
+        <ShellContent Content="{x:Static local:App.MichiNoEkiListPageInstance}"/>
     </FlyoutItem>
 
     <FlyoutItem Title="訪問率">
-        <ShellContent ContentTemplate="{DataTemplate local:VisitedRatePage}"/>
+        <ShellContent Content="{x:Static local:App.VisitedRatePageInstance}"/>
     </FlyoutItem>
 
 </Shell>

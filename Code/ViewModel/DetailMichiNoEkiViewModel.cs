@@ -23,6 +23,11 @@ namespace RoadsideStationApp
         private int _id;
 
         /// <summary>
+        /// 表示処理中
+        /// </summary>
+        private bool _isOpening = false;
+
+        /// <summary>
         /// 名称
         /// </summary>
         public AutoNotifyProperty<string> Name { get; set; } = new AutoNotifyProperty<string>(string.Empty);
@@ -184,6 +189,9 @@ namespace RoadsideStationApp
         /// <param name="e">イベント引数</param>
         private async void OnShowDetailMichiNoEkiInfoEvet(object? sender, ShowDetailMichiNoEkiInfoEvetArgs e)
         {
+            // 表示処理中
+            _isOpening = true;
+
             // 閲覧モード
             EditMode.Value = false;
 
@@ -192,6 +200,9 @@ namespace RoadsideStationApp
 
             // 詳細画面を表示
             await Application.Current!.MainPage!.Navigation.PushAsync(App.Instance.DetailPage);
+
+            // 表示処理終了
+            _isOpening = false;
         }
 
         /// <summary>
@@ -254,49 +265,52 @@ namespace RoadsideStationApp
         /// </summary>
         private async void VisitedButtonClicked()
         {
-            // 訪問済み→未訪問
-            if (IsVisited.Value == false)
+            if (_isOpening == false)
             {
-                // 確認ダイアログを表示
-                bool answer = await Application.Current!.MainPage!.DisplayAlert(
-                    "確認",
-                    "この道の駅を未訪問に変更しますか？\n(訪問日も削除されます)",
-                    "いいえ",
-                    "はい"
-                );
-
-                // ユーザーが「いいえ」を選択した場合、処理を中断
-                if (answer == true)
+                // 訪問済み→未訪問
+                if (IsVisited.Value == false)
                 {
-                    IsVisited.Value = true;
-                    return;
+                    // 確認ダイアログを表示
+                    bool answer = await Application.Current!.MainPage!.DisplayAlert(
+                        "確認",
+                        "この道の駅を未訪問に変更しますか？\n(訪問日も削除されます)",
+                        "いいえ",
+                        "はい"
+                    );
+
+                    // ユーザーが「いいえ」を選択した場合、処理を中断
+                    if (answer == true)
+                    {
+                        IsVisited.Value = true;
+                        return;
+                    }
+
+                    // 訪問日を削除する
+                    VisitedDate.SetDateTime(null);
                 }
 
-                // 訪問日を削除する
-                VisitedDate.SetDateTime(null);
-            }
-
-            // 未訪問→訪問済み
-            else
-            {
-                // 訪問日に本日の日付を入れる
-                if (VisitedDate.DateTime.Value == null)
+                // 未訪問→訪問済み
+                else
                 {
-                    VisitedDate.SetDateTime(DateTime.Now.Date);
+                    // 訪問日に本日の日付を入れる
+                    if (VisitedDate.DateTime.Value == null)
+                    {
+                        VisitedDate.SetDateTime(DateTime.Now.Date);
+                    }
                 }
-            }
 
-            // Visivility更新
-            EditModeAndVisitedVisible.Value = IsVisited.Value & EditMode.Value;
-            NotEditModeAndVisitedVisible.Value = IsVisited.Value & !EditMode.Value;
+                // Visivility更新
+                EditModeAndVisitedVisible.Value = IsVisited.Value & EditMode.Value;
+                NotEditModeAndVisitedVisible.Value = IsVisited.Value & !EditMode.Value;
 
-            // 閲覧モードの場合は保存する
-            if (EditMode.Value == false)
-            {
-                MichiNoEkiInfo? info = SetMichiNoEkiInfo();
-                if (info != null)
+                // 閲覧モードの場合は保存する
+                if (EditMode.Value == false)
                 {
-                    _ = _michiNoEkiDataModel.UpadateMichiNoEkiInfo(info);
+                    MichiNoEkiInfo? info = SetMichiNoEkiInfo();
+                    if (info != null)
+                    {
+                        _ = _michiNoEkiDataModel.UpadateMichiNoEkiInfo(info);
+                    }
                 }
             }
         }

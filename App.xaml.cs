@@ -9,9 +9,44 @@ namespace RoadsideStationApp
         private static App? instance;
 
         /// <summary>
+        /// 設定値
+        /// </summary>
+        private Dictionary<SettingID, int> _settingInfoDic = new Dictionary<SettingID, int>();
+
+        /// <summary>
         /// 道の駅データ管理Model
         /// </summary>
         public MichiNoEkiDataModel MichiNoEkiDataModel { get; private set; }
+
+        /// <summary>
+        /// フィルター設定データ管理Model
+        /// </summary>
+        public FilterSettingDataModel FilterSettingDataModel { get; private set; }
+
+        /// <summary>
+        /// 地図ページ インスタンス
+        /// </summary>
+        public static MapPage? MapPageInstance { get; private set; }
+
+        /// <summary>
+        /// フィルター設定ページ インスタンス
+        /// </summary>
+        public static FilterSettingPage? FilterSettingPageInstance { get; private set; }
+
+        /// <summary>
+        /// ピンカラー設定ページ インスタンス
+        /// </summary>
+        public static PinColorSettingPage? PinColorSettingPageInstance { get; private set; }
+
+        /// <summary>
+        /// 道の駅リストページ インスタンス
+        /// </summary>
+        public static MichiNoEkiListPage? MichiNoEkiListPageInstance { get; private set; }
+
+        /// <summary>
+        /// 訪問率ページ インスタンス
+        /// </summary>
+        public static VisitedRatePage? VisitedRatePageInstance { get; private set; }
 
         /// <summary>
         /// 詳細ページView
@@ -55,10 +90,16 @@ namespace RoadsideStationApp
 
             InitializeComponent();
 
-            // 道の駅データ管理Model生成
+            // Model生成
             MichiNoEkiDataModel = new MichiNoEkiDataModel();
+            FilterSettingDataModel = new FilterSettingDataModel();
 
-            // 詳細ページView生成
+            // Page生成(Page→View→ViewModel)
+            MapPageInstance = new MapPage();
+            FilterSettingPageInstance = new FilterSettingPage();
+            PinColorSettingPageInstance = new PinColorSettingPage();
+            MichiNoEkiListPageInstance = new MichiNoEkiListPage();
+            VisitedRatePageInstance = new VisitedRatePage();
             DetailPage = new DetailPage();
 
             // デフォルトのデータベースパス
@@ -72,6 +113,16 @@ namespace RoadsideStationApp
 
             // 画面読み込み
             MainPage = new AppShell();
+        }
+
+        /// <summary>
+        /// 設定値取得
+        /// </summary>
+        /// <param name="id">設定データID</param>
+        /// <returns>設定値</returns>
+        public int GetSettingInfo(SettingID id)
+        {
+            return _settingInfoDic[id];
         }
 
         protected override void OnStart()
@@ -112,6 +163,16 @@ namespace RoadsideStationApp
             // データベース接続の初期化
             DatabaseAccess = new DatabaseAccess(dbPath);
 
+            // 設定値を取得
+            // データベースから設定値取得
+            List<SettingInfo> tableList = await DatabaseAccess.GetAllAsync<SettingInfo>();
+
+            // ディクショナリーにセット
+            foreach (var item in tableList)
+            {
+                _settingInfoDic.Add((SettingID)item.ID, item.Value);
+            }
+
             // データベースロードイベント
             DatabaseLoaded?.Invoke(this, new EventArgs());
         }
@@ -132,6 +193,21 @@ namespace RoadsideStationApp
                     writer.Write(data);
                     if (data.Length < 1024 * 1024) break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 設定値をデータベースから取得
+        /// </summary>
+        private async void GetSettingInfo()
+        {
+            // データベースから設定値取得
+            List<SettingInfo> tableList = await DatabaseAccess.GetAllAsync<SettingInfo>();
+
+            // ディクショナリーにセット
+            foreach (var item in tableList)
+            {
+                _settingInfoDic.Add((SettingID)item.ID, item.Value);
             }
         }
     }

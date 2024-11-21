@@ -2,16 +2,42 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:RoadsideStationApp"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="RoadsideStationApp.FilterSettingView">
     
     <ContentView.BindingContext>
         <local:FilterSettingViewModel/>
     </ContentView.BindingContext>
 
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Grid>
+        <CollectionView ItemsSource="{Binding FilterList.Values}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout>
+                        <Border StrokeThickness="2">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=BindingContext.OpenDetailFilterCommand}" CommandParameter="{Binding ID}"/>
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout BackgroundColor="MediumSlateBlue">
+                                <CheckBox IsChecked="{Binding IsChecked.Value}" Color="LawnGreen"/>
+                                <Label Text="{Binding Name}" FontSize="24" Margin="5,10"/>
+                            </HorizontalStackLayout>
+                        </Border>
+                        <CollectionView ItemsSource="{Binding DetailDic.Values}" IsVisible="{Binding IsOpened.Value}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border StrokeThickness="2">
+                                        <HorizontalStackLayout BackgroundColor="DarkSalmon">
+                                            <CheckBox IsChecked="{Binding IsChecked.Value}" Color="LawnGreen"/>
+                                            <Label Text="{Binding Name}" FontSize="24" Margin="5,10"/>
+                                        </HorizontalStackLayout>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentView>

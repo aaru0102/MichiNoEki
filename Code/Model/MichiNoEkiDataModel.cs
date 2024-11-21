@@ -11,6 +11,9 @@ namespace RoadsideStationApp
     /// </summary>
     public class MichiNoEkiDataModel
     {
+        /// <summary>
+        /// Appインスタンス
+        /// </summary>
         private App _app;
 
         /// <summary>
