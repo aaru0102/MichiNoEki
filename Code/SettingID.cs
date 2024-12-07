@@ -25,5 +25,15 @@ namespace RoadsideStationApp
         /// ピンカラー対象月
         /// </summary>
         PinColorMonth = 3,
+
+        /// <summary>
+        /// 未オープン ピンカラー
+        /// </summary>
+        NotOpendPinColor = 4,
+
+        /// <summary>
+        /// スタンプ24時間押下OK ピンカラー
+        /// </summary>
+        StampAllTimeOKPinColor = 5,
     }
 }

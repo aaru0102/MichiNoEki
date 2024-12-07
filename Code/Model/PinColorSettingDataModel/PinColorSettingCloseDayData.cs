@@ -27,5 +27,11 @@ namespace RoadsideStationApp
             ID = (PinColorSettingCloseDayID)info.ID;
             Color = Color.FromArgb(info.Color);
         }
+
+        public PinColorSettingCloseDayData(PinColorSettingCloseDayID id, Color color)
+        {
+            ID = id;
+            Color = color;
+        }
     }
 }

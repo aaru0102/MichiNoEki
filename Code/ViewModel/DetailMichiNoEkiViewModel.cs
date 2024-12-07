@@ -189,6 +189,15 @@ namespace RoadsideStationApp
         /// <param name="e">イベント引数</param>
         private async void OnShowDetailMichiNoEkiInfoEvet(object? sender, ShowDetailMichiNoEkiInfoEvetArgs e)
         {
+            // 現在のナビゲーションスタックを取得
+            var navigationStack = Application.Current?.MainPage?.Navigation?.NavigationStack;
+
+            // DetailPage がすでに表示されている場合は処理をスキップ
+            if (navigationStack != null && navigationStack.Contains(App.Instance.DetailPage))
+            {
+                await Application.Current!.MainPage!.Navigation.PopAsync();
+            }
+
             // 表示処理中
             _isOpening = true;
 

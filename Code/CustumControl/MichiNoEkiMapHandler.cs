@@ -6,6 +6,7 @@ using MapKit;
 using Microsoft.Maui.Platform;
 using Microsoft.Maui.Maps.Handlers;
 using UIKit;
+using Microsoft.Maui.Controls.Maps;
 
 namespace RoadsideStationApp
 {
@@ -119,6 +120,16 @@ namespace RoadsideStationApp
             {
                 // ピンの色を変更する
                 pinView.MarkerTintColor = newColor.ToPlatform();
+
+                // ピンが現在選択されているか確認
+                bool isAnnotationSelected = PlatformView.SelectedAnnotations.Contains(annotation);
+                if (isAnnotationSelected == false)
+                {
+                    _annotations.Remove(pinId);
+                    PlatformView.RemoveAnnotation(annotation);
+                    _annotations.Add(pinId, annotation);
+                    PlatformView.AddAnnotation(annotation);
+                }
             }
         }
 
@@ -246,6 +257,7 @@ namespace RoadsideStationApp
             }
 
             // Annotationが読み込まれるされる際の処理を登録
+            platformView.GetViewForAnnotation -= GetCustomPinView;
             platformView.GetViewForAnnotation += GetCustomPinView;
         }
 
@@ -301,13 +313,11 @@ namespace RoadsideStationApp
                 pinView.DisplayPriority = 1000;
 
                 // 詳細ボタン押下時ハンドラ登録
-                if (pinView.RightCalloutAccessoryView is UIButton button)
-                {
-                    button.TouchUpInside += (sender, e) =>
+                pinView.RightCalloutAccessoryView?.AddGestureRecognizer(
+                    new UITapGestureRecognizer(() =>
                     {
                         customAnnotation.DetailButtonClickHandler?.Invoke(customAnnotation.ID);
-                    };
-                }
+                    }));
 
                 // 訪問状態に応じた画像情報を生成する
                 string imagePath = "star_icon.png";

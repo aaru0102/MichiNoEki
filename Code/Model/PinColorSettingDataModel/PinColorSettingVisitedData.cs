@@ -27,5 +27,11 @@ namespace RoadsideStationApp
             ID = (PinColorSettingVisitedID)info.ID;
             Color = Color.FromArgb(info.Color);
         }
+
+        public PinColorSettingVisitedData(PinColorSettingVisitedID id, Color color)
+        {
+            ID = id;
+            Color = color;
+        }
     }
 }

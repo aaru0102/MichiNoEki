@@ -24,6 +24,11 @@ namespace RoadsideStationApp
         public FilterSettingDataModel FilterSettingDataModel { get; private set; }
 
         /// <summary>
+        /// ピンカラー設定データ管理Model
+        /// </summary>
+        public PinColorSettingDataModel PinColorSettingDataModel { get; private set; }
+
+        /// <summary>
         /// 地図ページ インスタンス
         /// </summary>
         public static MapPage? MapPageInstance { get; private set; }
@@ -93,6 +98,7 @@ namespace RoadsideStationApp
             // Model生成
             MichiNoEkiDataModel = new MichiNoEkiDataModel();
             FilterSettingDataModel = new FilterSettingDataModel();
+            PinColorSettingDataModel = new PinColorSettingDataModel();
 
             // Page生成(Page→View→ViewModel)
             MapPageInstance = new MapPage();

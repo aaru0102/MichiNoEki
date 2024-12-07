@@ -39,5 +39,13 @@ namespace RoadsideStationApp
             Time = TimeSpan.Parse(info.Time);
             Color = Color.FromArgb(info.Color);
         }
+
+        public PinColorSettingCloseTimeData(PinColorSettingTimeID id, bool isValid, TimeSpan time, Color color)
+        {
+            ID = id;
+            IsValid = isValid;
+            Time = time;
+            Color = color;
+        }
     }
 }

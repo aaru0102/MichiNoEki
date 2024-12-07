@@ -57,14 +57,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="defaultmichinoeki.db" />
+	  <None Remove="Resources\AppIcon\appiconfg.svg" />
+	  <None Remove="Resources\AppIcon\stamp_rally.png" />
 	  <None Remove="Resources\notice.png" />
+	  <None Remove="Resources\Raw\defaultmichinoeki.db" />
 	  <None Remove="Resources\star_icon_visited.png" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Resources\Raw\defaultmichinoeki.db">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </EmbeddedResource>
+	  <MauiAsset Include="defaultmichinoeki.db">
+	    <LogicalName>%(RecursiveDir)%(Filename)%(Extension)</LogicalName>
+	  </MauiAsset>
 	  <MauiImage Include="Resources\notice.png">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </MauiImage>
@@ -77,6 +81,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="ColorPicker.Maui" Version="1.0.0" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
 		<PackageReference Include="CsvHelper" Version="33.0.1" />

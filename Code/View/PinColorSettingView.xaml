@@ -1,17 +1,297 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cp="https://trungnt2910.github.io/schemas/maui/2022/colorpicker"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:local="clr-namespace:RoadsideStationApp"
              x:Class="RoadsideStationApp.PinColorSettingView">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <local:BoolReverseConverter x:Key="BoolReverseConverter" />
+            <local:EnumEqualityConverter x:Key="EnumEqualityConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
 
     <ContentView.BindingContext>
         <local:PinColorSettingViewModel/>
     </ContentView.BindingContext>
 
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <Grid>
+            <VerticalStackLayout IsEnabled="{Binding ColorPickerVisible.Value, Converter={StaticResource BoolReverseConverter}}">
+                <Grid>
+                    <Border StrokeThickness="2">
+                        <Grid>
+                            <Label Text="未オープン" FontSize="24"/>
+                            <Grid BackgroundColor="{Binding NotOpendPinColor.Value}" WidthRequest="100" HorizontalOptions="End">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ChangeColorCommand}" CommandParameter="未オープン"/>
+                                </Grid.GestureRecognizers>
+                                <Border Stroke="White" StrokeThickness="2"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <Grid>
+                    <Border StrokeThickness="2">
+                        <Grid>
+                            <Label Text="24時間スタンプ押印OK" FontSize="24"/>
+                            <Grid BackgroundColor="{Binding StampAllTimeOKPinColor.Value}" WidthRequest="100" HorizontalOptions="End">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding ChangeColorCommand}" CommandParameter="24時間スタンプ押印OK"/>
+                                </Grid.GestureRecognizers>
+                                <Border Stroke="White" StrokeThickness="2"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <Grid>
+                    <Border StrokeThickness="2">
+                        <Grid>
+                            <Label Text="開館時間閉館時間 対象月" FontSize="24" VerticalOptions="Center"/>
+                            <HorizontalStackLayout HorizontalOptions="End">
+                                <Picker SelectedItem="{Binding PinColorMonth.Value}" FontSize="24">
+                                    <Picker.ItemsSource>
+                                        <x:Array Type="{x:Type x:Int32}">
+                                            <x:Int32>1</x:Int32>
+                                            <x:Int32>2</x:Int32>
+                                            <x:Int32>3</x:Int32>
+                                            <x:Int32>4</x:Int32>
+                                            <x:Int32>5</x:Int32>
+                                            <x:Int32>6</x:Int32>
+                                            <x:Int32>7</x:Int32>
+                                            <x:Int32>8</x:Int32>
+                                            <x:Int32>9</x:Int32>
+                                            <x:Int32>10</x:Int32>
+                                            <x:Int32>11</x:Int32>
+                                            <x:Int32>12</x:Int32>
+                                        </x:Array>
+                                    </Picker.ItemsSource>
+                                </Picker>
+                                <Label Text="月" FontSize="24" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <VerticalStackLayout>
+                    <Grid>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenDetailMenuCommand}" CommandParameter="{x:Static local:PinColorSettingID.Visited}"/>
+                        </Grid.GestureRecognizers>
+                        <Border StrokeThickness="2"/>
+                        <HorizontalStackLayout Margin="0,10,0,0">
+                            <RadioButton IsChecked="{Binding ValidPinColorSetting.Value, Converter={StaticResource EnumEqualityConverter}, ConverterParameter={x:Static local:PinColorSettingID.Visited}}">
+                                <RadioButton.Behaviors>
+                                    <toolkit:EventToCommandBehavior EventName="CheckedChanged" Command="{Binding ChangeValidPinColorSettingCommand}" CommandParameter="{x:Static local:PinColorSettingID.Visited}"/>
+                                </RadioButton.Behaviors>
+                            </RadioButton>
+                            <Label Text="訪問状態" FontSize="24"/>
+                        </HorizontalStackLayout>
+                    </Grid>
+                    <CollectionView ItemsSource="{Binding VisitedDataDic.Values}" IsVisible="{Binding VisitedDetailMenuOpened.Value}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border StrokeThickness="2">
+                                    <Grid HeightRequest="42">
+                                        <Label Text="{Binding Name}" VerticalOptions="Center" FontSize="24" Margin="60,0,0,0"/>
+                                        <Grid BackgroundColor="{Binding Color.Value}" WidthRequest="100" HorizontalOptions="End">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=BindingContext.ChangeVisitedColorCommand}" CommandParameter="{Binding ID}"/>
+                                            </Grid.GestureRecognizers>
+                                            <Border Stroke="White" StrokeThickness="2"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <Grid>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenDetailMenuCommand}" CommandParameter="{x:Static local:PinColorSettingID.OpenTime}"/>
+                        </Grid.GestureRecognizers>
+                        <Border StrokeThickness="2"/>
+                        <HorizontalStackLayout Margin="0,10,0,0">
+                            <RadioButton IsChecked="{Binding ValidPinColorSetting.Value, Converter={StaticResource EnumEqualityConverter}, ConverterParameter={x:Static local:PinColorSettingID.OpenTime}}">
+                                <RadioButton.Behaviors>
+                                    <toolkit:EventToCommandBehavior EventName="CheckedChanged" Command="{Binding ChangeValidPinColorSettingCommand}" CommandParameter="{x:Static local:PinColorSettingID.OpenTime}"/>
+                                </RadioButton.Behaviors>
+                            </RadioButton>
+                            <Label Text="開館時間" FontSize="24"/>
+                        </HorizontalStackLayout>
+                    </Grid>
+                    <CollectionView ItemsSource="{Binding OpenTimeDataDic.Values}" IsVisible="{Binding OpenTimeDetailMenuOpened.Value}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border StrokeThickness="2">
+                                    <Grid Margin="20,0,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0" IsChecked="{Binding IsValid.Value}" Color="LawnGreen">
+                                            <CheckBox.Style>
+                                                <Style TargetType="CheckBox">
+                                                    <Style.Triggers>
+                                                        <Trigger TargetType="CheckBox" Property="IsEnabled" Value="True">
+                                                            <Setter Property="Color" Value="LawnGreen" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </CheckBox.Style>
+                                        </CheckBox>
+                                        <Label Grid.Column="1" Text="&lt;=" FontSize="30"/>
+                                        <TimePicker Grid.Column="2" Time="{Binding Time.Value}" FontSize="24"/>
+                                        <Grid Grid.Column="3" BackgroundColor="{Binding Color.Value}" WidthRequest="100" HorizontalOptions="End">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=BindingContext.ChangeOpenTimeColorCommand}" CommandParameter="{Binding ID}"/>
+                                            </Grid.GestureRecognizers>
+                                            <Border Stroke="White" StrokeThickness="2"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Grid IsVisible="{Binding OpenTimeDetailMenuOpened.Value}">
+                        <Border StrokeThickness="2">
+                            <Grid Margin="20,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" IsChecked="{Binding OpenTimeLastData.IsValid.Value}" IsEnabled="False"/>
+                                <Label Grid.Column="1" Text="  >" FontSize="30"/>
+                                <TimePicker Grid.Column="2" Time="{Binding OpenTimeLastData.Time.Value}" FontSize="24" IsEnabled="False"/>
+                                <Grid Grid.Column="3" BackgroundColor="{Binding OpenTimeLastData.Color.Value}" WidthRequest="100" HorizontalOptions="End">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ChangeOpenTimeColorCommand}" CommandParameter="{Binding OpenTimeLastData.ID}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Border Stroke="White" StrokeThickness="2"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <Grid>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenDetailMenuCommand}" CommandParameter="{x:Static local:PinColorSettingID.CloseTime}"/>
+                        </Grid.GestureRecognizers>
+                        <Border StrokeThickness="2"/>
+                        <HorizontalStackLayout Margin="0,10,0,0">
+                            <RadioButton IsChecked="{Binding ValidPinColorSetting.Value, Converter={StaticResource EnumEqualityConverter}, ConverterParameter={x:Static local:PinColorSettingID.CloseTime}}">
+                                <RadioButton.Behaviors>
+                                    <toolkit:EventToCommandBehavior EventName="CheckedChanged" Command="{Binding ChangeValidPinColorSettingCommand}" CommandParameter="{x:Static local:PinColorSettingID.CloseTime}"/>
+                                </RadioButton.Behaviors>
+                            </RadioButton>
+                            <Label Text="閉館時間" FontSize="24"/>
+                        </HorizontalStackLayout>
+                    </Grid>
+                    <Grid IsVisible="{Binding CloseTimeDetailMenuOpened.Value}">
+                        <Border StrokeThickness="2">
+                            <Grid Margin="20,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" IsChecked="{Binding CloseTimeFirstData.IsValid.Value}" IsEnabled="False"/>
+                                <Label Grid.Column="1" Text="  &lt;" FontSize="30"/>
+                                <TimePicker Grid.Column="2" Time="{Binding CloseTimeFirstData.Time.Value}" FontSize="24" IsEnabled="False"/>
+                                <Grid Grid.Column="3" BackgroundColor="{Binding CloseTimeFirstData.Color.Value}" WidthRequest="100" HorizontalOptions="End">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ChangeCloseTimeColorCommand}" CommandParameter="{Binding CloseTimeFirstData.ID}"/>
+                                    </Grid.GestureRecognizers>
+                                    <Border Stroke="White" StrokeThickness="2"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <CollectionView ItemsSource="{Binding CloseTimeDataDic.Values}" IsVisible="{Binding CloseTimeDetailMenuOpened.Value}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border StrokeThickness="2">
+                                    <Grid Margin="20,0,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Column="0" IsChecked="{Binding IsValid.Value}" Color="LawnGreen">
+                                            <CheckBox.Style>
+                                                <Style TargetType="CheckBox">
+                                                    <Style.Triggers>
+                                                        <Trigger TargetType="CheckBox" Property="IsEnabled" Value="True">
+                                                            <Setter Property="Color" Value="LawnGreen" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </CheckBox.Style>
+                                        </CheckBox>
+                                        <Label Grid.Column="1" Text=">=" FontSize="30"/>
+                                        <TimePicker Grid.Column="2" Time="{Binding Time.Value}" FontSize="24"/>
+                                        <Grid Grid.Column="3" BackgroundColor="{Binding Color.Value}" WidthRequest="100" HorizontalOptions="End">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=BindingContext.ChangeCloseTimeColorCommand}" CommandParameter="{Binding ID}"/>
+                                            </Grid.GestureRecognizers>
+                                            <Border Stroke="White" StrokeThickness="2"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <Grid>
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding OpenDetailMenuCommand}" CommandParameter="{x:Static local:PinColorSettingID.CloseDay}"/>
+                        </Grid.GestureRecognizers>
+                        <Border StrokeThickness="2"/>
+                        <HorizontalStackLayout Margin="0,10,0,0">
+                            <RadioButton IsChecked="{Binding ValidPinColorSetting.Value, Converter={StaticResource EnumEqualityConverter}, ConverterParameter={x:Static local:PinColorSettingID.CloseDay}}">
+                                <RadioButton.Behaviors>
+                                    <toolkit:EventToCommandBehavior EventName="CheckedChanged" Command="{Binding ChangeValidPinColorSettingCommand}" CommandParameter="{x:Static local:PinColorSettingID.CloseDay}"/>
+                                </RadioButton.Behaviors>
+                            </RadioButton>
+                            <Label Text="定休日" FontSize="24"/>
+                        </HorizontalStackLayout>
+                    </Grid>
+                    <CollectionView ItemsSource="{Binding CloseDayDataDic.Values}" IsVisible="{Binding CloseDayDetailMenuOpened.Value}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border StrokeThickness="2">
+                                    <Grid HeightRequest="42">
+                                        <Label Text="{Binding Name}" VerticalOptions="Center" FontSize="24" Margin="60,0,0,0"/>
+                                        <Grid BackgroundColor="{Binding Color.Value}" WidthRequest="100" HorizontalOptions="End">
+                                            <Grid.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentView}}, Path=BindingContext.ChangeCloseDayColorCommand}" CommandParameter="{Binding ID}"/>
+                                            </Grid.GestureRecognizers>
+                                            <Border Stroke="White" StrokeThickness="2"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+            <VerticalStackLayout IsVisible="{Binding ColorPickerVisible.Value}" Margin="0,20,0,0">
+                <cp:ColorPicker x:Name="ColorPicker" WidthRequest="360" HeightRequest="360" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" ColorSpectrumStyle="TintToHueToShadeStyle" PickedColor="{Binding SelectedColor.Value, Mode=TwoWay}"/>
+                <HorizontalStackLayout HorizontalOptions="End">
+                    <Button Text="保存" Command="{Binding SaveColorCommand}"/>
+                    <Button Text="閉じる" Command="{Binding SelectColorCancelCommand}"/>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
 </ContentView>

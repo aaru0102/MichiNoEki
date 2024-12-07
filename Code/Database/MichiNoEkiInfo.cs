@@ -43,12 +43,12 @@ namespace RoadsideStationApp
         public string Prefecture { get; set; } = string.Empty;
 
         /// <summary>
-        /// 開館時間リスト(月～日)
+        /// 開館時間リスト(1月～12月)
         /// </summary>
         public List<TimeSpan?> OpenTimeList{ get; set; } = new List<TimeSpan?>();
 
         /// <summary>
-        /// 閉館時間リスト(月～日)
+        /// 閉館時間リスト(1月～12月)
         /// </summary>
         public List<TimeSpan?> CloseTimeList { get; set; } = new List<TimeSpan?>();
 

@@ -14,6 +14,7 @@ namespace RoadsideStationApp
     public class MapViewModel
     {
         private Dictionary<int, bool> _tempVisibleDic = new Dictionary<int, bool>();
+        private Dictionary<int, Color> _tempPinColorDic = new Dictionary<int, Color>();
 
         /// <summary>
         /// 道の駅データ管理Model
@@ -24,6 +25,11 @@ namespace RoadsideStationApp
         /// フィルター設定データ管理Model
         /// </summary>
         private FilterSettingDataModel _filterSettingDataModel;
+
+        /// <summary>
+        /// ピンカラー設定データ管理Model
+        /// </summary>
+        private PinColorSettingDataModel _pinColorSettingDataModel;
 
         /// <summary>
         /// 道の駅ピン
@@ -63,6 +69,13 @@ namespace RoadsideStationApp
             // フィルター設定データ管理Modelのイベント捕捉
             _filterSettingDataModel.AllUpdateVisibleEvent += OnAllUpdateVisibleEvent;
             _filterSettingDataModel.UpdateVisibleEvent += OnUpdateVisibleEvent;
+
+            // ピンカラー設定データ管理Model取得
+            _pinColorSettingDataModel = App.Instance.PinColorSettingDataModel;
+
+            // ピンカラー設定データ管理Modelのイベント捕捉
+            _pinColorSettingDataModel.AllUpdatePinColorEvent += OnAllUpdatePinColorEvent;
+            _pinColorSettingDataModel.UpdatePinColorEvent += OnUpdatePinColorEvent;
         }
 
         /// <summary>
@@ -139,6 +152,11 @@ namespace RoadsideStationApp
                 {
                     Pins[michiNoEkiInfo.ID].Visibility.Value = _tempVisibleDic[michiNoEkiInfo.ID];
                 }
+
+                if (_tempPinColorDic.ContainsKey(michiNoEkiInfo.ID) == true)
+                {
+                    Pins[michiNoEkiInfo.ID].PinColor.Value = _tempPinColorDic[michiNoEkiInfo.ID];
+                }
             }
         }
 
@@ -201,6 +219,38 @@ namespace RoadsideStationApp
         {
             // ピンの表示状態更新
             Pins[e.ID].Visibility.Value = e.Visible;
+        }
+
+        /// <summary>
+        /// ピンカラー全件更新イベントハンドラ
+        /// </summary>
+        /// <param name="sender">イベント送信元</param>
+        /// <param name="e">イベント引数</param>
+        private void OnAllUpdatePinColorEvent(object? sender, AllUpdatePinColorEventArgs e)
+        {
+            // ピンの表示状態セット
+            foreach (var item in e.PinColorDic)
+            {
+                if (Pins.ContainsKey(item.Key) == true)
+                {
+                    Pins[item.Key].PinColor.Value = item.Value;
+                }
+                else
+                {
+                    _tempPinColorDic.Add(item.Key, item.Value);
+                }
+            }
+        }
+
+        /// <summary>
+        /// ピンカラー更新イベントハンドラ
+        /// </summary>
+        /// <param name="sender">イベント送信元</param>
+        /// <param name="e">イベント引数</param>
+        private void OnUpdatePinColorEvent(object? sender, UpdatePinColorEventArgs e)
+        {
+            // ピンの表示状態更新
+            Pins[e.ID].PinColor.Value = e.Color;
         }
 
         /// <summary>

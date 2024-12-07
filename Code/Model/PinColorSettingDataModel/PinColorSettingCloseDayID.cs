@@ -42,5 +42,10 @@ namespace RoadsideStationApp
         /// 日曜日
         /// </summary>
         Sunday = 7,
+
+        /// <summary>
+        /// 定休日なし
+        /// </summary>
+        Nothing = 8,
     }
 }
